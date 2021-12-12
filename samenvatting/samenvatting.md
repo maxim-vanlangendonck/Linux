@@ -1,6 +1,96 @@
 # Linux Syllabus
-
+![cheat-sheet](/cheat-sheet.md)
 # Hoofdstuk 1: Intro & user management
+## Permissies
+- = toegangsrechten voor bestanden en directories
+- instelbaar op niveau van:
+  - u: gebruiker, **u**ser
+  - g: groep, **g**roup
+  - o: andere gebruikers, **o**thers
+  - a: iedereen, **a**ll
+- soorten permissies
+  - r: lezen, **r**ead
+  - w: schrijven, **w**rite
+  - x: e**x**ecute
+    - bestand, uitvoeren als commando
+    - directory: toegang met cd
+### Instellen met symbolische notatie
+- permissies instellen met `chmod`, symbolische notatie
+
+### Instellen met octale notatie
+```bash
+u      g      o
+r w x  r - x  - - -
+1 1 1  1 0 1  0 0 0
+4+2+1  4+0+1  0+0+0
+  7      5      0
+``` 
+- voorbeelden
+  ```bash
+    chmod 755 script
+    chmod 600 file
+    chmod 644 file
+    chmod 775 dir
+  ```
+- **Merk op!**
+  - sommige permissie-combinaties komen nooit voor in de praktijk, bv. 1,2,3
+  - directories altijd lezen(r) en execute(x) *samen* toekennen of afnemen
+  - permissies owner => group => others
+  - root negeert bestandpermissies
+  - tip octale permissies opvragen: `stat -c %a BESTAND`
+
+## Meer Permissies
+### Permissies van nieuwe bestanden
+- `umask` bepaalt permissies van bestand/directory bij aanmaken
+- huidige waarde opvragen: `umask` zonder opties
+- opgegeven in octale notatie
+  - enkel 0,2 en 7 zijn zinvol
+- welke permissies *afnemen*
+  - bestand krijgt nooit execute-permissie
+
+### Speciale permissies: *SUID*
+- set user ID (SUID)
+- op bestanden met execute-permissies
+- tijdens uitvoeren krijgt de gebruiker de rechten van de eigenaar van het bestand
+- symbolisch: `u+s`
+- octaal: 4
+
+### Speciale permissies: *SGID*
+- set group ID (SGID)
+- op bestanden met execute-permissies
+- tijdens uitvoeren krijgt de gebruiker de rechten van de groep van het bestand
+- symbolisch: `g+s`
+- octaal: 2
+
+### Speciale permissies: *restricted deletion*
+- restricted deletion, of sticky bit
+- toegepast op directories
+- een bestand mag in zo'n directory enkel door de eigenaar verwijderd worden
+- symbolisch: `+t`
+- octaal: 1
+
+## Beheer van gebruikers
+### Commando's voor gebruikers en groepen
+- gebruikers: `useradd`,`usermod`, `userdel`
+- groepen: `groupadd`, `groupmod`, `groupdel`
+- info opvragen: `who`, `groups`, `id`
+
+### Configuratiebestanden
+- gebruikers: `/etc/passwd`, `/etc/shadow`
+- groepen: `/etc/group`
+
+### primaire vs aanvullende groepen
+- primaire groep: 4e veld van `/etc/passwd` (group ID)
+- aanvullende groepen: in `/etc/group`, gebruiker staat niet vermeld in de primaire groep
+
+### root of administrator
+- root: oorspronkelijk de enige administrator van het systeem
+- sudo: kan root rechten verlenen aan een gebruiker
+  - voor een bepaald commando
+  - voor alle commando's
+- `/etc/sudoers`, vertelt je wie er precies 'sudo'-rechten heeft
+  - group `sudo` in Ubuntu/Debian
+  - group `wheel` in Fedora/RedHat
 
 # Hoofdstuk 2: Combining commands into scripts
 
@@ -680,6 +770,81 @@ CRON_TZ=Japan
 ```
 
 # Hoofdstuk 8: Troubleshooting, SSH-configuratie
+## Network Access Layer
+- bare metal:
+  - test de kabels
+  - check de switch/NIC LEDs
+- VM : 
+  - check virtual netwerk adapter type en instellingen
+- `ip link`
+
+## Internet Layer
+### Checklist: Internet Layer: Lokale netwerk configuratie
+- de lokale netwerk configuratie bekijken
+  - ip adres: `ip a`
+  - default gateway: `ip r`
+  - DNS Service: `/etc/resolv.conf`
+- meest voorkomende fouten (DHCP)
+  - geen ip adres:
+    - DHCP is onbereikbaar
+    - DHCP geeft geen ip adres
+  - 169.254.x.x
+    - geen DHCP offer, een "link-local" adres
+  - bekijk log: `sudo journalctl -f`
+- mees voorkomende fouten (fixed ip)
+  - unexpected subnet
+    - check config
+  - correct IP, "network unreachable"
+    - check network mask
+- DNS Server: /etc/resolv.conf
+  - nameserver option aanwezig?
+  - expected IP?
+### Checklist: Internet Layer: Checking routing within the LAN
+1. ping tussen de hosts
+2. ping default GW/DNS
+3. query DNS(dig, nslookup, getent)
+
+- LAN connectiviteit: ping
+  - GUI-VM -> VM: `ping 192.168.76.72`
+  - VM --> GUI-VM: `ping 192.168.76.101`
+  - VM -> NAT-GW: `ping 10.0.2.2`
+  - VM -> NAT-DNS: `ping 10.0.2.3` 
+- DNS
+  - `dig icanhazip.com`
+  - `nslookup icanhazip.com`
+  - `getent ahosts icanhazip.com`
+
+## Transport Layer
+### Service running?
+- `sudo systemctl status SERVICE`
+- active (running) vs inactive (dead)
+  - `sudo systemctl start httpd`
+  - fail? bekijk Application Layer
+- start at boot: enabled vs disabled
+  - `systemctl enable httpd`
+
+### Firewall settings
+`sudo firewall-cmd --list-all`
+
+- 
+### Correcte poorten/interfaces?
+
+## Application Layer
+- Checklist:
+  - check de logs
+  - valideer config file syntax
+  - gebruikt client tools
+    - curl, smbclient(Samba), dig (DNS), etc.
+    - Netcat (ncat, nc)
+
+## SELinux troubleshooting
+- Mandatory Access Control in de Linux Kernel
+- instellingen
+  - booleans
+  - contexts, labels
+  - policy modules
+### Check file context
+### Check booleans  
 
 # Hoofdstuk 9: SSH-tuning, BIND
 
