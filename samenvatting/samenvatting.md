@@ -846,8 +846,64 @@ CRON_TZ=Japan
 ### Check file context
 ### Check booleans  
 
-# Hoofdstuk 9: SSH-tuning, BIND
+# Hoofdstuk 9: Mount
+## Pre knowledge
+### Disk Devices
+- sate disk devices
+### Disk partitions
+- every disk:
+  - maximum 4 primary/vergrote partities
+  - 1 vergrote partitie kan meerdere logische (sub)partities hebben
+  | Partitie Type | benaming  |
+  | :---          | :---      |
+  | Primaire (max 4)  | 1-4   |
+  | Extended (max 1)  | 1-4   |
+  | logical           | 5-    |
 
+### fdisk
+- toont en verander partities van een disk
+```bash
+$ sudo fdisk -l 
+Disk /dev/sda: 64 GiB, 68719476736 bytes, 134217728 sectors
+[...]
+
+Device     Boot   Start       End   Sectors  Size Id Type
+/dev/sda1          2048   4501503   4499456  2.1G 82 Linux swap / Solaris
+/dev/sda2  *    4501504 134217727 129716224 61.9G 83 Linux
+```
+
+### File systems
+- ext2
+- ext3: met journaling
+- ext4: laatste versie, met journaling
+- xfs
+- andere file systems
+  - vfat
+  - ntfs
+  - iso9660
+
+## Mount
+### Manual mounting
+- mount = maakt een partitie die beschikbaar is op de file tree
+1. maak een mount punt ~ een mount directory
+  `sudo mkdir /mnt/newmountpoint`
+2. verbind de partitie aan het mount punt
+  `sudo mount -t ext3 /dev/sdb3 /mnt/newmountpoint`
+
+### Permanent mounts
+- partities worden gemount tijdens boot in: `/etc/fstab`
+
+### Mount options
+- ro: read-only
+- rw: read-write
+- remount:
+
+## UUID
+### UUID def
+- UUID = Universal Unique Identifier
+  - 128 bits
+  - gegenereerd tijdens het formatten
+- lookup UUID: `sudo tune2fs -l /dev/sda2 | grep UUID
 # Hoofdstuk 10: DNS met BIND
 
 # Hoofdstuk 11: Linux installatie: expert-modus

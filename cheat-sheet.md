@@ -149,3 +149,8 @@ Eenvoudige workflow voor een éénmansproject met synchronisatie naar een "remot
 ### Internet Layer
 ### Transport Layer
 ### Application Layer
+
+## Mounting
+1. formatteren van een partitie: `mkfs`
+2. een partitie mounten: `mount`
+3. mount punten bekijken: `mount | grep sd`
