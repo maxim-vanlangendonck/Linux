@@ -930,6 +930,59 @@ Device     Boot   Start       End   Sectors  Size Id Type
   - recursion: recursieve queries toelaten
     - zou no moeten zijn op een authoritative name server
 
-# Hoofdstuk 11: Linux installatie: expert-modus
+# RAID
+## JBOD
+= Just a Bunch Of Disks
+## RAID 0
+- Redundant Array of Independent Disks
+- Stripping
+  - beveiligd tegen single diefstal
+  - niet beveiligd tegen het falen van hardware
 
-# Hoofdstuk 12: LVM, RAID
+## RAID 1
+- mirroring (gebruik makend van 2 of meerdere disks)
+  - veilig tegen het falen van hardware, maar volledig onveilig tegen diefstal
+  - wanneer je Raid 1 gebruikt, gebruik volume encryptie (bitlocker)
+  - Hot Spare disk = inactieve schijf die is uitgevallen, indien nodig kan een herbouwactie automatisch starten
+
+## RAID 5
+- Pariteit, heeft op ze minst 3 disks nodig
+  - altijd 1 disk voor de capaciteit
+- als 1 disk faalt, dan is het terug een RAID 0 operatie
+- als Hot Spare geconfigueerd is, dan zal de rebuild actie onmiddelijk beginnen (= hierdoor een hogere lading op de overblijvende schijven)
+- de huidige 'snelle' processoren maken RAID 5 even snel als RAID 1 of zelfs beter
+
+## RAID 10
+- minstens 4 harde schijven nodig, de capaciteit is gehalveerd
+- het wordt vaak gebruikt door ondernemingen
+- gelezen als dit RAID 1 (mirror) + RAID 0 (stripe)
+## Soft- or Hardware RAID?
+- de verschillen: waar nemen de berekening plaats?
+  - hardware RAID: gedediceerde RAID chip (onboard or plugin card)
+  - software RAID: gedeelde processor (meestal CPU)
+- als je werkt met een DAS (Directly Attached Storage) systeem: dan heeft hardware RAID niet veel nut
+  - de hoofd-CPU is krachtig genoeg voor de toegevoegde RAID functionaliteiten
+  - het herstel van data is gemakkelijker met software RAID
+- met een SAN / NAS is er niet echt een keuze:
+  - door de dedicated RAID controller met propretaire algoritmes
+
+## Het grote probleem met Hardware Raid
+- de algoritmen en protocollen bedrijfseigen en daarom zeer moeilijk te herstellen in geval van gegevensverlies of forensisch onderzoek
+- Elke (goede) RAID-controller dupliceert RAID-configuratie op de schijven voor hersteldoeleinden, echter: geen standaard
+- RAID-controllers verouderen
+
+## Software RAID
+- voordelen:
+  - kan gedaan worden door de OS zelf
+    - Windows: Windows Dynamic Volumes of Storage Spaces
+    - Linux: soft RAID of Logical Volumes
+    - of door extra software (Starwind)
+  - gemakkelijk te vergroten als het moet
+  - herstelbaar
+  - "gratis"
+  - werkt onafhankelijk van de interface (IDE, SATA, SAS, SCSI,...)
+  - snel (het maakt gebruik van snelle, moderne CPUs)
+- nadelen:
+  - een OS is niet gemakkelijk te installeren op software RAID
+  - niet alle RAID levels zijn mogelijk
+  - Hot Swap is niet altijd mogelijk te gebruiken (het hangt af van de configuratie van het interface protocol)
