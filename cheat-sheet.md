@@ -2,24 +2,72 @@
 
 Naam student: Maxim Van Langendonck
 
+## Commando's deel 1: Users
+| Taak  | Commando  |
+| :---  | :---      |
+| Wat is jouw username? | `whoami`  |
+| Wie is er ingelogd?    | `who`     |
+| Toont wie er ingelogd is, en wat ze doen  | `w`   |
+| user id, primary group id, lijst van groepen | `id`   |
+| inloggen als een andere user | `su <username>`    |
+| user aanmaken | `useradd` |
+| user verwijderen  | `userdel <parameters> <username>` |
+| user aanpassen    | `usermod <parameters> <username>` |
+| het veranderen van de login shell | `chsh`    |
+| het veranderen van het wachtwoord | `passwd`  |
+| een groep aanmaken    | `groupadd <naam>` |
+| user toevoegen aan groep en lid blijven van andere groep|`sudo usermod -aG groep gebruiker`		|
+| primaire groep aanpassen			|`sudo usermod -g groep gebruiker`		|
+| user toevoegen en verwijderen uit groepen	|`sudo usermod -G groep1,groep2 gebruiker`	|
+| in welke groepen zit de user  | `groups`  |
+| een groep aanpassen   | `groupmod <parameter> <groepnaam>`    |
+| owner van een file aanpassen | `chown`    |
+| groep owner aanpassen | `chgrp`   |
+
+### Het commando useradd
+| Parameter | Uitleg    |
+| :---      | :---      |
+| `-m`  | Het forceren van het maken van een homedirectory  |
+| `-d <homedirectory-naam>` | Naam geven aan de homedirectory   |
+| `-c <descriptie>` | Een descriptie geven aan de user  |
+| `-p <wachtwoord>` | Wachtwoord instellen voor de gebruiker    |
+
+### Het commando userdel
+| Parameter | Uitleg    |
+| :---      | :---  |
+| `-r`  | Verwijdert de homedirectory van de user   |
+| `-f`  | Het forceren van het verwijderen  |
+
+### Het commando usermod
+| Parameter | Uitleg    |
+| :---      | :---  |
+| `-d <homedirectory>`  | De nieuwe homedirectory   |
+| `l <nieuwe_login>`    | Een nieuwe login toekennen aan de user    |
+| `-L`  | Het locken van de user, een '!' zetten voor het geëncrypteerde wachtwoord |
+| `-p <nieuw_wachtwoord>` | het wachtwoord veranderen van de gebruiker  |
+| `-U` | het unlocken van de user   |
+
+### Het commando groupmod
+| Parameter | Uitleg    |
+| `-n <new_naam>`  | naam aanpassen |
+
+## Commando's deel 2: Streams, pipes, redirects en filters
+| Taak  | Commando  |
+| :---  | :---  |
+| tegengaan dan een files verwijderd wordt door streams | `set -o noclobber`    |
+
+### Regular Expressions
+| Taak  | Commando  |
+| :---  | :---  |
+| lijst geven van geëxporteerde variabelen  | `env` |
+| het exporteren van variabelen | `export <variabele>`  |
+| lijst weergeven van envrionment variabelen    | `set` |
+
+
 ## Commando's
 | Taak                   			| Commando 					|
 | :---                   			| :---     					|
 | IP-adress(en) opvragen 			|`ip a`   					|
-| User aanmaken		 			|`useradd`					|
-| user aanpassen	 			|`usermod`					|
-| user verwijderen	 			|`userdel`					|
-| groep aanmaken	 			|`groupadd`					|
-| groep aanpassen 				|`groupmod`					|
-| groep verwijderen				|`groupdel`					|
-| wie is er ingelogd?	 			|`who` 						|
-| in welke groepen zit de user 			|`groups`					|
-| wat is de id van de user?			|`id`						|
-| primaire groep aanpassen			|`sudo usermod -g groep gebruiker`		|
-| user toevoegen en verwijderen uit groepen	|`sudo usermod -G groep1,groep2 gebruiker`	|
-| user toevoegen en lid blijven van andere groep|`sudo usermod -aG groep gebruiker`		|
-| eigen wachtwoord aanpassen			|`passwd`					|
-| wachtwoord van user aanpassen als admin	|`sudo passwd <username>`			|
 | surfen nr link				|`curl`						|
 
 ## Belangrijkste filter-commando's
@@ -44,25 +92,17 @@ Naam student: Maxim Van Langendonck
 ## Configuratiebestanden
 1. Gebruikers: `/etc/passwd`
 2. Wachtwoorden: `/etc/shadow`
-3. Groepen: `/etc/group`
-4. DHCP: `/etc/dhpc/dhcpd.conf`
-5. Apache: `/etc/httpd/`
-6. Hoofdconfiguratiebestand Apache: `/etc/httpd/conf/httpd.conf`
-7. configuratiebestanden plugins Apache: `/etc/httpd/conf.d/*.conf`
-8. HTML-bestanden Apache DocumentRoot: `/var/www/html/`
-9. logbestanden Apache: `/var/log/httpd/`
-10. Hoofdconfiguratiebestand SELinux: `/etc/selinux/config`
-
-## Git workflow
-Eenvoudige workflow voor een éénmansproject met synchronisatie naar een "remote repository".
-
-| Taak                                        | Commando                  |
-| :---                                        | :---                      |
-| Huidige toestand project                    | `git status`              |
-| Bestanden toevoegen/klaarzetten voor commit | `git add FILE...`         |
-| Bestanden "committen"                       | `git commit -m 'MESSAGE'` |
-| Synchroniseren naar Github                  | `git push`                |
-| Wijzigingen op Github binnenhalen           | `git pull`                |
+3. Default waarden voor het commando useradd: `/etc/default/useradd`
+4. Groepen: `/etc/group`
+5. DHCP: `/etc/dhpc/dhcpd.conf`
+6. Apache: `/etc/httpd/`
+7. Hoofdconfiguratiebestand Apache: `/etc/httpd/conf/httpd.conf`
+8. configuratiebestanden plugins Apache: `/etc/httpd/conf.d/*.conf`
+9. HTML-bestanden Apache DocumentRoot: `/var/www/html/`
+10. logbestanden Apache: `/var/log/httpd/`
+11. Hoofdconfiguratiebestand SELinux: `/etc/selinux/config`
+12. files voor profile settings en default waarden `/etc/skel/`
+13. default settings voor user passwords: `/etc/login.defs`
 
 ## Gebruik van VIM
 | Taak				| Commando		|
@@ -92,10 +132,7 @@ Eenvoudige workflow voor een éénmansproject met synchronisatie naar een "remot
 5. lijst geïnstalleerde packages: `dnf list installed`
 6. lijst beschikbare packages: `dnf list available`
 
-## Toon sockets in gebruik
-1. commando: `ss`
-
-
+## Het commando ss
 | Taak			| Commando		|
 | :---			| :---			|
 | toon server sockets	| `ss -l` --listening	|
