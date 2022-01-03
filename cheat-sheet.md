@@ -69,6 +69,7 @@ Naam student: Maxim Van Langendonck
 | :---                   			| :---     					|
 | IP-adress(en) opvragen 			|`ip a`   					|
 | surfen nr link				|`curl`						|
+| query log aanzetten   | `sudo rndc querylog`  |
 
 ## Belangrijkste filter-commando's
 | Commando | Doel 								|
@@ -103,6 +104,7 @@ Naam student: Maxim Van Langendonck
 11. Hoofdconfiguratiebestand SELinux: `/etc/selinux/config`
 12. files voor profile settings en default waarden `/etc/skel/`
 13. default settings voor user passwords: `/etc/login.defs`
+14. BIND: `/etc/named.conf`
 
 ## Gebruik van VIM
 | Taak				| Commando		|

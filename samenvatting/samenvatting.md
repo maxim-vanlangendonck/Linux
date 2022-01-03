@@ -930,6 +930,115 @@ Device     Boot   Start       End   Sectors  Size Id Type
   - recursion: recursieve queries toelaten
     - zou no moeten zijn op een authoritative name server
 
+# Hoofdstuk 10: DNS met BIND
+## DNS
+### Wat is DNS?
+- vertaling van hostnaam naar IP adres in een tekstbestand
+- DNS query = de opzoeking in dat tekstbestand
+- queries kunne over het netwerk gestuurd worden
+
+### Root DNS Server
+- 12 root servers: [a-m].root-servers.net
+- verschillende instanties per root server
+  - totaal: 1000+
+- instanties van een root server delen hun IP adres
+  - routers sturen trafiek naar dichtsbijzijnde instantie
+
+### Types van DNS servers
+- Authoritative: "bron van waarheid" voor een zone
+  - zonebestand
+- Forwarding / caching: stuurt requests door naar andere servers
+- Primary/Secondary: voor "high availability"
+  - enkel primaire heeft zonebestand
+  - secundaire vraagt regelmatig "zone transfer"
+
+### Best practives in productie
+- authoritative-only
+  - caching & authoritative niet mengen
+- DNS only
+  - geen andere services op die machine
+- een typische AD DC overtreedt beide regels
+
+## Interactie met DNS
+### nslookup
+- stuur vraag naar de DNS-server
+
+## BIND
+### Berkely Internet Name Domain
+- implementatie van het DNS protocol
+- meest gebruikte
+- de facto standaard op Unix-achtige systemen
+
+### Installatie op Enterprise Linux
+- package: bind
+- configuratie: `/etc/named*`
+- zonebestaden, enz: `/var/named/`
+
+### Hoofdconfiguratiebestand
+- `/etc/named.conf`
+- belangrijkste opties:
+  - listen-on: poort nummer + netwerk interfaces
+    - any;
+    - 127.0.0.0/8; 192.168.76.0/24
+  - allow-query: welke hosts mogen queries sturen
+  - recursion: recursieve queries toelaten
+    - zou no moeten zijn op een authoritative name server
+
+### Forwarding name server
+
+### Types van Resource Records
+- A: hostname --> IP
+- AAAA: hostnaam --> IPv6
+- PTR: IP --> hostname
+- CNAME: alias
+- SOA: start of authority
+- NS: authoritative name server(s)
+- MX: mail server
+- SRV: service
+- TXT: text record
+- ...
+
+### Start of Authority
+```bash
+@ IN SOA ns.example.com. hostmaster.example.com. (
+  21120117 1D 1H 1W 1D)
+```
+
+- srv.example.com.: primaire DNS-server
+- hostmaster.example.com.: email adres van de sysadmin
+- 21120120: serial
+  - let op secundaire servers zullen alleen update uitvoeren als serial verhoogd is
+- timeouts
+  - 1D: wanneer zal secundaire ns proberne de zone te synchorniseren
+  - 1H: tijd tussen update-pogingen
+  - 1W: wanneer zijn zonegegevens niet langer "authoritative" (enkel op secondaire)
+  - 1D: hoe lang kan een NAME ERROR resultaat gecached worden
+- shortcuts
+  - $ORIGIN: domeinnaam
+    - wordt toegevoegd aan alle namen die niet eindigen op .
+    - @: wordt vervangen door waarde van $ORIGIN
+  - $TTL: Time To Live (in seconden)
+    - hoe lan gmag een record gecached worden
+- (un)qualified domain names
+  - Fully Qualified Domain Name (FQDN): eindigt met een punt
+  - unqualified: zonder punt
+    - $ORIGIN toegevoegd aan het einde
+- tijdsaanduidingen
+  - default = seconden
+  - M = minuten
+  - H = uren
+  - D = dagen
+  - W = weken
+
+### Reverse lookup zone
+- naam van een "reverse lookup zone"
+  - neem het IP-adres: 192.0.2.0/24
+  - laat het host-deel vallen: 192.0.2
+  - keer volgorde om: 2.0.192
+  - voeg in -addr.arpa. toe
+  - **RESULTAAT**: 2.0.192.in-addr.arpa.
+- root hint:
+  - elke (forwarding) name server moet een lijst bijhouden van de root name servers
 # RAID
 ## JBOD
 = Just a Bunch Of Disks
