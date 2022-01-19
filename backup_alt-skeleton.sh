@@ -1,13 +1,14 @@
 #! /bin/bash
 
 # Stop het script bij een onbestaande variabele
-
+set -o nounset
 ### Algemene variabelen wrden eerst gedefinieerd
 # De map waarin je op zoek gaat naar het opgegeven type bestanden
 SEARCH_DIR=/etc/alternatives
 # De map waar je de documenten gaat opslaan
 BACKUP_TEMP_DIR=/usr/share/nginx/html
 BACKUP_DIR=/var/www/backups
+DATUM=date +"%y-%m-%d"
 
 
 ### --- functions ---
@@ -33,7 +34,7 @@ function install_nginx() {
   # Firewall ...
   sudo firewall-cmd --permanent --add-port 88/udp
   sudo firewall-cmd --reload
-
+  >&2 /dev/null
 }
 
 # kopieer de symbolisch gelinkte bestanden van de zoekmap naar de backupmap, inclusief indexbestand
@@ -44,9 +45,9 @@ function copy_symlink_files() {
   # Hint: werk met find en schrijf naar een tijdelijk bestand pamd_index.txt
 
   #  kopieer alle bestanden uit het indexbestand met een loop
-  while read ;
+  while  ; do
     find $WorkDIR -name "[e-n]*" -type l | sort | sudo tee $DestDIR/pamd_index.txt > /dev/null
-  do
+  
 
 	done < # Hier kan je het tijdelijk bestand inlezen in een loop
 }
@@ -66,10 +67,11 @@ function create_tarball() {
   
   # maak de tarbal aan
   tar -c
+  tar -tf $WorkDIR/$FileName | sed "s+./++g" | sed "/^$/d" | sort
   # kopieer de tarball naar de doelmap
   cp /var/www/backups
   # geef de inhoud van de tarbal weer
-
+  printf 'Inhoud van :'
 }
 
 
@@ -80,7 +82,6 @@ function create_tarball() {
 install_nginx
 
 # geef de datum weer van vandaag, gebruik deze globale variabele
-DATUM=date +"%y-%m-%d"
 printf "Vandaag is het $DATUM\n"
 
 # leegmaken doelmap
@@ -91,6 +92,6 @@ rename_mtaMTA ...
 
 readonly_permissions ... 
 
-create_tarball ...
+create_tarball 
 
 # Einde script
