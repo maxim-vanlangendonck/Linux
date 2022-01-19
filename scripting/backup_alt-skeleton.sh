@@ -6,9 +6,9 @@ set -o nounset
 # De map waarin je op zoek gaat naar het opgegeven type bestanden
 SEARCH_DIR=/etc/alternatives
 # De map waar je de documenten gaat opslaan
-BACKUP_TEMP_DIR=/usr/share/nginx/html
+BACKUP_TEMP_DIR=/BackupDir
 BACKUP_DIR=/var/www/backups
-DATUM=$(date +"%y-%m-%d")
+DATUM=$(date +%Y-%m-%d)
 
 
 ### --- functions ---
@@ -24,7 +24,7 @@ function install_nginx() {
   # Installeer de webserver software 
   sudo dnf install -y nginx &> /dev/null
   # Pas de configuratie van de webserver aan
-  sed -i "s|/$BACKUP_TEMP_DIR|/$BACKUP_DIR/|g" /etc/nginx/nginx.conf
+  sed -i 's|/usr/share/nginx/html|/var/www/backups|g' /etc/nginx/nginx.conf
 
   # Herstart de service
   sudo systemctl start nginx && sudo systemctl enable nginx
@@ -49,7 +49,8 @@ fi
   # Hint: werk met find en schrijf naar een tijdelijk bestand pamd_index.txt
 find "${WorkDIR}" -name "[e-n]*" -type l | sort | sudo tee "${DestDIR}"/pamd_index.txt > /dev/null
   #  kopieer alle bestanden uit het indexbestand met een loop
-  while read line ; do
+  while read line  
+  do
     cp -R "${WorkDIR}"/"${line}" "${DestDIR}"
 
 	done < "${DestDIR}"/pamd_index.txt # Hier kan je het tijdelijk bestand inlezen in een loop
