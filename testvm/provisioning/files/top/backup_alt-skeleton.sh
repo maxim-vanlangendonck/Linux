@@ -51,7 +51,7 @@ find "${WorkDIR}" -name "[e-n]*" -type l | sort | sudo tee "${DestDIR}"/pamd_ind
   #  kopieer alle bestanden uit het indexbestand met een loop
   while read line  
   do
-    cp -R "${WorkDIR}"/"${line}" "${DestDIR}"
+    cp -R "${line}" "${DestDIR}"
 
 	done < "${DestDIR}"/pamd_index.txt # Hier kan je het tijdelijk bestand inlezen in een loop
 }
@@ -90,7 +90,7 @@ function create_tarball() {
 install_nginx
 
 # geef de datum weer van vandaag, gebruik deze globale variabele
-printf "Vandaag is het %D\n" "${DATUM}"
+echo "Vandaag is het ${DATUM}"
 
 # leegmaken doelmap
 rm "${BACKUP_DIR}"/*
