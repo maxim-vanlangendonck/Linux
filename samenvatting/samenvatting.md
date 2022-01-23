@@ -904,31 +904,6 @@ Device     Boot   Start       End   Sectors  Size Id Type
   - 128 bits
   - gegenereerd tijdens het formatten
 - lookup UUID: `sudo tune2fs -l /dev/sda2 | grep UUID
-# Hoofdstuk 10: DNS met BIND
-## DNS-server met BIND
-## DNS
-- vertaling van hostnaam naar IP in een tekstbestand
-- DNS query = opzoeking in dat tekstbestand
-- queries kunnen over het netwerk gestuurd worden
-
-## Interactie met DNS
-## BIND
-- Berkeley Internet Name Domain
-  - implementatie van het DNS protocol
-  - meest gebruikte
-  - de facto standaard op Unix-achtige systemen
-### Installatie op Enterprise Linux
-- package: bind
-- configuratie: /etc/named*
-- zonebestanden, enz: /var/named/
-- hoofdconfiguratiebestande: /etc/named.conf
-- belangrijkste opties:
-  - listen-on: poort nummer + netwerk interfaces
-    - any;
-    - 127.0.0.0/8; 192.168.76.0/24
-  - allow-query: welke hosts mogen queries sturen?
-  - recursion: recursieve queries toelaten
-    - zou no moeten zijn op een authoritative name server
 
 # Hoofdstuk 10: DNS met BIND
 ## DNS
