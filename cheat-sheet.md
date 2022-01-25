@@ -237,6 +237,7 @@ Naam student: Maxim Van Langendonck
 14. BIND: `/etc/named.conf`
 15. Zonebestanden BIND: `/var/named`
 16. Hoofdconfiguratiebestand voor SELinux: `/etc/selinux/config`
+17. bestand voor bash configuratie `~/.bashrc`
 
 ## Gebruik van VIM
 | Taak				| Commando		|
